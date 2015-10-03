@@ -55,18 +55,25 @@ genImage matrix m = map (convColor . genColor [Color 0.2 0.3 0.4, Color 0.85 0.3
 
 convColor :: RealFrac a => Color a -> (Word8,Word8,Word8)
 convColor (Color r g b) = (w8 (r*255.0),w8 (g*255.0),w8 (b*255.0))
-  where w8 = round
+  where w8 = floor
 
 -- Mandelbrot
 
+{-
 mandelbrot :: (RealFloat a, Integral b) => Complex a -> Complex a -> b -> b
 mandelbrot origin ci mx = aux origin ci mx
             where aux _ _ 0  = 0
                   aux z c n | magnitude z <= 2 = aux (z*z+c) c (n-1)
                   aux z _ n | magnitude z > 2 = n
+-}
+
+mandelbrot :: (RealFloat a, Integral b) => Complex a -> Complex a -> b ->b -> b
+mandelbrot _ _ 0 _ = 0
+mandelbrot z c mx n | (realPart z)**2 + (imagPart z)**2 <= 4 = mandelbrot (z*z+c) c (mx-1) (n+1)
+                    | otherwise = n
 
 mandelMapper :: Integral a => a -> (Int,Int) -> (Int,Int) -> a
-mandelMapper mx size pos = mandelbrot (0 :+ 0) (switchSpace size pos) mx
+mandelMapper mx size pos = mandelbrot (0 :+ 0) (switchSpace size pos) mx 0
 
 mandelMatrix :: Integral a => a -> Int -> Int -> Matrix a
 mandelMatrix mx x y = matrix x y (mandelMapper mx (x,y))
