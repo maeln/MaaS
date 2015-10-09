@@ -16,7 +16,7 @@ mandelbrot z c mx n | (realPart z)**2 + (imagPart z)**2 <= 4 = mandelbrot (z*z+c
                     | otherwise = n
 
 mandel_map :: (Enum b, Integral a, RealFloat b) => a -> b -> b -> b -> b -> b -> [a]
-mandel_map m ptx pty x y z = map (\ n -> mandelbrot (0:+0) n m 0) (concat (genComplexSpace ptx pty x y z))
+mandel_map m ptx pty x y z = map (\ n -> mandelbrot (0:+0) n m 0) (genComplexSpace ptx pty x y z)
 
 genImage :: Integral b => [b] -> b -> [(Word8,Word8,Word8)]
 genImage space m = map (convColor . genColor [
